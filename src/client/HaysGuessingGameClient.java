@@ -32,8 +32,8 @@ public class HaysGuessingGameClient extends GuessingGameClient {
 					// set new secret value for this round
 					secretValue=3;
 				}else{
-					// send first guess
-					lastGuess=1;
+					// Guess 5 to follow binary search alogirthm
+					lastGuess=5;
 					try{
 					c.publish(GUESS, lastGuess);
 					}catch(Exception e){
@@ -59,7 +59,11 @@ public class HaysGuessingGameClient extends GuessingGameClient {
 			@Override
 			public void onUpdate(Object response) {
 				int hint=(Integer)response;
-				lastGuess+=hint;
+				//follow binary search algorithm for guessing
+                if(hint == 0)
+                    lastGuess= lastGuess - (int)(lastGuess/2);
+                else
+                    lastGuess = lastGuess + (int)(lastGuess/2);
 				try{
 					System.out.println("Guess: "+lastGuess);
 					c.publish(GUESS, lastGuess);
